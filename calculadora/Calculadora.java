@@ -1,4 +1,4 @@
-/*Copyright (C) <2016>  <David García> <@Garci0679>
+/*Copyright (C) <2016>  <David García> <@Apuntes_autodi>
 
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -29,30 +29,42 @@ import java.util.logging.Logger;
  */
 public class Calculadora extends JFrame {
 
+    //--------------------Declaración de variables--------------------------------
+    private JButton btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnBorrar, btnCE, btnPunto,
+            btnDividir,btnIgual, btnMenos, btnMultiplicar, btnResta, btnSuma;
+    private JPanel jPanel1, jPanelNumeros, jPanelOperaciones, jPanelPantalla;
+    private JToggleButton jToggleBtnApagar;
+    private JTextField txtFieldOperador, txtFieldAvisos;
+    private JFormattedTextField txtFieldLinea1, txtFieldLinea2, txtFieldResultado;
+
+    //Formateo del valor que se muestra en el JTextField txtFieldResultado
+    private DecimalFormat df;
+    //Variable de tipo doble para almacenar el parseo del campo en el que se encuentra la calculadora
+    private double lineaActual;
+    //Variable de tipo booleano para cambiar entre el campo txtFieldResultado y txtFieldLinea1. Si es false escribe
+    //en txtFieldResultado. Si es true txtFieldLinea1
+    private boolean cambia;
+    //----------------Fin declaración e iniciación de variables útiles-------------
+
     /**
      * Constructor de la clase Calculadora
      */
-
     public Calculadora() {
 
-
-        /**
-         * Iniciación de variables
-         */
-
+        //------------------Iniciación de variables ----------------------------
         jPanelOperaciones = new JPanel();
-        btnsuma = new JButton();
-        btnresta = new JButton();
-        btnmultiplicar = new JButton();
-        btndividir = new JButton();
-        btnigual = new JButton();
+        btnSuma = new JButton();
+        btnResta = new JButton();
+        btnMultiplicar = new JButton();
+        btnDividir = new JButton();
+        btnIgual = new JButton();
         btnCE = new JButton();
         jToggleBtnApagar = new JToggleButton();
         btnBorrar = new JButton();
         jPanelPantalla = new JPanel();
         txtFieldLinea2 = new JFormattedTextField(new Double(0));
         txtFieldLinea1 = new JFormattedTextField(new Double(0));
-        txtField2Operador = new JTextField();
+        txtFieldOperador = new JTextField();
         txtFieldResultado = new JFormattedTextField(new Double(0));
         jPanelNumeros = new JPanel();
         btn1 = new JButton();
@@ -64,13 +76,15 @@ public class Calculadora extends JFrame {
         btn7 = new JButton();
         btn8 = new JButton();
         btn9 = new JButton();
-        btnmenos = new JButton();
+        btnMenos = new JButton();
         btnPunto = new JButton();
         btn0 = new JButton();
         jPanel1 = new JPanel();
         txtFieldAvisos = new JTextField();
 
-        //Fin iniciación de variables
+        df = new DecimalFormat("#.############");
+        cambia = false;
+        //----------------Fin iniciación de variables------------------------
 
         /*/Configuración del JFrame
         * No permite cambiar de tamaño la ventana para que mantenga el orden de los elementos.
@@ -80,23 +94,23 @@ public class Calculadora extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         setLocation(400,400);
-        setTitle("Calculadora - @Garci0679");
+        setTitle("Calculadora");
 
         //---------------------ASIGNACIÓN DE LOS TEXTOS A LOS BOTONES DE OPERACIÓN Y SU RESPECTIVA FUNCIÓN ------
-        btnsuma.setText("+");
-        btnOperacion(btnsuma);
+        btnSuma.setText("+");
+        btnOperacion(btnSuma);
 
-        btnresta.setText("-");
-        btnOperacion(btnresta);
+        btnResta.setText("-");
+        btnOperacion(btnResta);
 
-        btnmultiplicar.setText("*");
-        btnOperacion(btnmultiplicar);
+        btnMultiplicar.setText("*");
+        btnOperacion(btnMultiplicar);
 
-        btndividir.setText("/");
-        btnOperacion(btndividir);
+        btnDividir.setText("/");
+        btnOperacion(btnDividir);
 
-        btnigual.setText("=");
-        btnOperacion(btnigual);
+        btnIgual.setText("=");
+        btnOperacion(btnIgual);
 
         btnCE.setText("CE");
         btnBorrar(btnCE);
@@ -106,7 +120,9 @@ public class Calculadora extends JFrame {
         jToggleBtnApagar.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+
                 System.exit(0);
+
             }
         });
         //Fin botón de apagado
@@ -114,7 +130,6 @@ public class Calculadora extends JFrame {
         btnBorrar.setText("Bor");
         btnBorrar(btnBorrar);
         //------------------------FIN ASIGNACIÓN DE TEXTOS Y FUNCIONES------------------------------
-
 
         //Inicio del grouplayout que contiene los botones de operaciones
         GroupLayout jPanelOperacionesLayout = new GroupLayout(jPanelOperaciones);
@@ -125,21 +140,21 @@ public class Calculadora extends JFrame {
                                 .addContainerGap()
                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanelOperacionesLayout.createSequentialGroup()
-                                                .addComponent(btnsuma, GroupLayout.PREFERRED_SIZE, 60,
+                                                .addComponent(btnSuma, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnresta, GroupLayout.PREFERRED_SIZE, 60,
+                                                .addComponent(btnResta, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE))
                                         .addGroup(jPanelOperacionesLayout.createSequentialGroup()
-                                                .addComponent(btnmultiplicar, GroupLayout.PREFERRED_SIZE, 60,
+                                                .addComponent(btnMultiplicar, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btndividir, GroupLayout.PREFERRED_SIZE, 60,
+                                                .addComponent(btnDividir, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE))
                                         .addGroup(jPanelOperacionesLayout.createSequentialGroup()
                                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(
                                                         GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(btnigual, GroupLayout.PREFERRED_SIZE, 60,
+                                                        .addComponent(btnIgual, GroupLayout.PREFERRED_SIZE, 60,
                                                                 GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(btnBorrar, GroupLayout.PREFERRED_SIZE, 60,
                                                                 GroupLayout.PREFERRED_SIZE))
@@ -157,20 +172,20 @@ public class Calculadora extends JFrame {
                         .addGroup(jPanelOperacionesLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnsuma, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnSuma, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnresta, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnResta, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btndividir, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnDividir, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnmultiplicar, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnMultiplicar, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnCE, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnigual, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnIgual, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelOperacionesLayout.createParallelGroup(
@@ -181,8 +196,6 @@ public class Calculadora extends JFrame {
                                 .addContainerGap())
         );
         //Fin grouplauout de los botones de operaciones
-
-
 
         /* JPanel que funcionará como pantalla de la calculadora
         * La calculadora tiene 4 líneas. La primera y la tercera para introducir numeros, la segunda para el signo
@@ -213,7 +226,6 @@ public class Calculadora extends JFrame {
         jPanelPantalla.add(txtFieldLinea1);
         txtFieldLinea1.setBounds(12, 10, 330, 30);
 
-
         /*txtFieldLinea1.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -230,13 +242,13 @@ public class Calculadora extends JFrame {
         });*/
 
         //JFormattedTextField para el signo
-        txtField2Operador.setEditable(false);
-        txtField2Operador.setFont(new Font("Dialog", 0, 24)); // NOI18N
-        txtField2Operador.setHorizontalAlignment(JTextField.RIGHT);
-        txtField2Operador.setText("");
-        txtField2Operador.setBorder(null);
-        jPanelPantalla.add(txtField2Operador);
-        txtField2Operador.setBounds(12, 40, 330, 30);
+        txtFieldOperador.setEditable(false);
+        txtFieldOperador.setFont(new Font("Dialog", 0, 24)); // NOI18N
+        txtFieldOperador.setHorizontalAlignment(JTextField.RIGHT);
+        txtFieldOperador.setText("");
+        txtFieldOperador.setBorder(null);
+        jPanelPantalla.add(txtFieldOperador);
+        txtFieldOperador.setBounds(12, 40, 330, 30);
 
         //JFormattedTextField para el resultado de los cálculos
         txtFieldResultado.setEditable(false);
@@ -279,8 +291,8 @@ public class Calculadora extends JFrame {
         btn9.setText("9");
         btn(btn9);
 
-        btnmenos.setText("+/-");
-        btnOperacionEspecial (btnmenos);
+        btnMenos.setText("+/-");
+        btnOperacionEspecial (btnMenos);
 
         btnPunto.setText(".");
         btnOperacionEspecial (btnPunto);
@@ -325,7 +337,7 @@ public class Calculadora extends JFrame {
                                                 .addComponent(btn9, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE))
                                         .addGroup(jPanelNumerosLayout.createSequentialGroup()
-                                                .addComponent(btnmenos, GroupLayout.PREFERRED_SIZE, 60,
+                                                .addComponent(btnMenos, GroupLayout.PREFERRED_SIZE, 60,
                                                         GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED,
                                                         GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -356,7 +368,7 @@ public class Calculadora extends JFrame {
                                         .addComponent(btn9, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelNumerosLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnmenos, GroupLayout.PREFERRED_SIZE, 60,
+                                        .addComponent(btnMenos, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnPunto, GroupLayout.PREFERRED_SIZE, 60,
                                                 GroupLayout.PREFERRED_SIZE)
@@ -454,54 +466,10 @@ public class Calculadora extends JFrame {
                 new Calculadora().setVisible(true);
             }
         });
-
-
     }
 
-    // Declaración de variables
-    private JButton btn0;
-    private JButton btn1;
-    private JButton btn2;
-    private JButton btn3;
-    private JButton btn4;
-    private JButton btn5;
-    private JButton btn6;
-    private JButton btn7;
-    private JButton btn8;
-    private JButton btn9;
-    private JButton btnBorrar;
-    private JButton btnCE;
-    private JButton btnPunto;
-    private JButton btndividir;
-    private JButton btnigual;
-    private JButton btnmenos;
-    private JButton btnmultiplicar;
-    private JButton btnresta;
-    private JButton btnsuma;
-    private JPanel jPanel1;
-    private JPanel jPanelNumeros;
-    private JPanel jPanelOperaciones;
-    private JPanel jPanelPantalla;
-    private JToggleButton jToggleBtnApagar;
-    private JTextField txtField2Operador;
-    private JTextField txtFieldAvisos;
-    private JFormattedTextField txtFieldLinea1;
-    private JFormattedTextField txtFieldLinea2;
-    private JFormattedTextField txtFieldResultado;
-    //Fin declaración de variables
-
-    //Declaración e iniciación de variables útiles para las clases de cálculo y control
-    //sumaResultado almacenará el valor del JTextField txtFieldResultado
-    double sumaResultado = 0;
-    //entra actua como indicador de la línea actual en la que se está escribiendo
-    boolean entra = false;
-    //Formateo del valor que se muestra en el JTextField txtFieldResultado
-    DecimalFormat df = new DecimalFormat("#.############");
-    //Fin declaración e iniciación de variables útiles
-
-
     /* El método compruebaCero comprueba que el valor del campo no está vacio.
-    * @ param textField - Recibe como parámetro un campo formateado, del que comprobrará que no está vacio.
+    * @param textField - Recibe como argumento un campo formateado, del que comprobrará que no está vacio.
     * Si lo está, le pasa como valor un 0.
     */
     private void compruebaCero (JFormattedTextField textField) {
@@ -509,82 +477,157 @@ public class Calculadora extends JFrame {
         if (textField.getText().equals(" ")) {
 
             textField.setText("0");
+        } else if (textField.getText().equals("")){
+
+            textField.setText("0");
         }
     }
 
-
     /* Método ponSigno para poner el signo del operador al pulsar el boton
-    * @param btnsigno - Recibe un boton que es del que se coge el signo
+    * @param btnsigno - Recibe como argumento un botón que es del que se coge el signo para escribirlo en
+    * el campo txtFieldOperador
     */
     private void ponSigno (JButton btnSigno) {
 
         if (!btnSigno.getText().equals("=")) {
 
-            txtField2Operador.setText(btnSigno.getText());
-
-            entra = true;
+            txtFieldOperador.setText(btnSigno.getText());
 
         }
     }
 
+    /*Método para devolver el campo en el que la calculadora tiene que escribir. Si el campo de operador
+    * txtfieldOperador no tiene ningún valor escribe en la primera línea de la pantalla de la calculadora que se
+    * corresponde con el campo txtFieldLinea1. Si tiene algún signo escribe en la tercera línea de la pantalla los
+    * dígitos que pulsemos, esta tercera línea se corresponde con el campo txtFieldLinea2.
+     */
+    private JFormattedTextField campo () {
+
+        JFormattedTextField var;
+
+        if (txtFieldOperador.getText().equals("")) {
+
+            var = txtFieldLinea1;
+
+        } else {
+
+            var = txtFieldLinea2;
+
+        }
+
+        return var;
+
+    }
+
+    /*Método para calcular el resto de un valor de un campo. El fin de este método es determinar si el campo tiene
+    * un valor doble o entero. Si hay resto, es doble. Si el resto es 0 es entero.
+    * @param campoAComprobar - Recibe el campo sobre que el se quiere calcular el resto
+    * @return resto - devuelve el resto
+    */
+    private double calculoResto (JFormattedTextField campoAComprobar) {
+
+        lineaActual = Double.parseDouble(campoAComprobar.getText());
+
+        int entero = (int) lineaActual;
+
+        double resto = lineaActual - entero;
+
+        return resto;
+
+    }
+
+    /*Método apra calcular el resto de un doble. Este método sirve para saber si hay resto en el campo o no.
+    * @param resultadoACalcular - campo de tipo doble sobre el que calcular el resto
+    */
+    private  double calculaResto (double resultadoACalcular) {
+
+        int entero = (int) resultadoACalcular;
+
+        double resto = resultadoACalcular - entero;
+
+        return resto;
+
+    }
+
+    /*Método para escribir en el campo txtFieldResultado el valor entero o doble.
+    */
+    private void escribeValor (double valorAEscribir) {
+
+        int entero = (int) valorAEscribir;
+
+        double resto = valorAEscribir - entero;
+
+        if (resto != 0.0) {
+
+            String res = df.format(resto);
+
+            res = res.replace(",",".");
+
+            txtFieldResultado.setText(res);
+
+        } else {
+
+            txtFieldResultado.setText(Integer.toString((int) valorAEscribir));
+        }
+    }
+
+    /*Método para actualizar los campos de la pantalla.
+    * @param valor - Recibe como argumento un valor de tipo doble que va a ser el que va a escribir en la primera
+    * línea de la pantalla de la calculadora.
+     */
+    private void actualizarCampos (double valor) {
+
+        if (!(calculaResto(valor) == 0.0)) {
+
+            txtFieldLinea1.setText(Double.toString(valor));
+
+        } else {
+
+            txtFieldLinea1.setText(Integer.toString((int) valor));
+
+        }
+
+        txtFieldLinea2.setText("");
+
+        txtFieldResultado.setText("");
+    }
+
     /*/Método btn
-    * @param boton - recibe como parámetro el botón sobre el que lo usamos. De esta manera le añade un ActionListener
-    * para ejecutar las acciones asignadas a ese botón. Este método es solo para los botones numéricos. Comprueba si
-    * en los campos txtFieldLinea1 y txtFieldLinea2 el valor es 0, de ser así no muestra más que un solo 0. En caso
-    * de pulsarse el . muestra el valor existente más el punto y deja escribir después
+    * @param boton - recibe como parámetro el botón sobre el que lo usamos. Añade un KeyListener para capturar las
+    * teclas y pulsar el botón correspondiente. También se añade un ActionListener para ejecutar las acciones asignadas
+    * a ese botón. Este método es solo para los botones numéricos. Comprueba si se pulsa el botón del punto "."
+    * para escribir después del punto.
     *
     */
     private void btn (final JButton boton) {
 
+        boton.setFocusable(false);
+
+        //Añade un KeyListener para capturar las teclas del teclado
         boton.addKeyListener(new PresionarTecla());
 
+        //Añade un ActionListener para realizar escribir el número en el campo
         boton.addActionListener(new ActionListener() {
 
+            public void actionPerformed(ActionEvent e) {
 
-            public void actionPerformed(ActionEvent e) throws NullPointerException {
+                //Hace una llamada al método compruebaCero para poner a Cero el campo en caso de que sea null
+                compruebaCero(campo());
 
-                if (!entra) {
+                //Inicia la variable lineaActual con una conversión a doble de la cadena que hay en el campo
+                lineaActual = Double.parseDouble(campo().getText());
 
-                    compruebaCero(txtFieldLinea1);
+                //Si el valor de la lineaActual es 0 y el campo no contiene un punto escribe el dígito del botón.
+                //Este caso ocurre cuando escribimos el primer dígito y no existe nada en el campo.
+                if (lineaActual == 0 && !campo().getText().contains(".")) {
 
-                    if (Double.parseDouble(txtFieldLinea1.getText()) == 0.0
-                            && !txtFieldLinea1.getText().contains(".")) {
+                    campo().setText(boton.getText());
 
-                            txtFieldLinea1.setText(boton.getText());
+                //En caso de que no se cumplan las anteriores escribe el dígito del botón después del valor del campo
+                } else {
 
+                    campo().setText(campo().getText() + boton.getText());
 
-                        } else if (Double.parseDouble(txtFieldLinea1.getText()) == 0.0
-                            && txtFieldLinea1.getText().contains(".")) {
-
-                        txtFieldLinea1.setText(txtFieldLinea1.getText()+boton.getText());
-
-                    } else {
-
-                        txtFieldLinea1.setText(txtFieldLinea1.getText() + boton.getText());
-
-                    }
-
-
-            } else if (entra) {
-
-                    compruebaCero(txtFieldLinea2);
-
-                    if (Double.parseDouble(txtFieldLinea2.getText()) == 0.0
-                            && !txtFieldLinea2.getText().contains(".")) {
-
-                        txtFieldLinea2.setText(boton.getText());
-
-                    } else if (Double.parseDouble(txtFieldLinea2.getText()) == 0.0
-                            && txtFieldLinea2.getText().contains(".")) {
-
-                        txtFieldLinea2.setText(txtFieldLinea2.getText()+boton.getText());
-
-
-                    } else {
-
-                        txtFieldLinea2.setText(txtFieldLinea2.getText() + boton.getText());
-
-                    }
                 }
             }
         });
@@ -592,11 +635,11 @@ public class Calculadora extends JFrame {
 
     /* Este método es para los botones de cambio de valor "+/-" y el botón del punto "."
     * @param - boton - Comprueba si se han pulsado y les indica que hacer en tal caso. Recibe como parámetro el
-    * propio botón. En cualquiera de los dos casos comprueba la línea en la que se encuentra y realiza la acción
-    * del botón en cuestión.
+    * propio botón. En cualquiera de los dos casos realiza la acción del botón en cuestión.
     */
-
     private void btnOperacionEspecial (final JButton boton) {
+
+        boton.setFocusable(false);
 
         boton.addKeyListener(new PresionarTecla());
 
@@ -604,551 +647,421 @@ public class Calculadora extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
 
-                if (!entra) {
+                compruebaCero(campo());
 
-                    compruebaCero(txtFieldLinea1);
+                double campoCambiaSigno = Double.parseDouble(campo().getText());
 
-                    double valor = Double.parseDouble(txtFieldLinea1.getText());
+                switch (boton.getText()) {
 
-                    int enteros = (int) valor;
+                    case "+/-":
 
-                    double resto = valor - enteros;
+                        campoCambiaSigno = -+campoCambiaSigno;
 
-                    if (boton.getText().equals("+/-"))  {
+                        if (!(calculoResto(campo()) == 0.0)) {
 
-                        valor = -+valor;
-
-                        if (resto != 0.0) {
-
-                            txtFieldLinea1.setText(Double.toString(valor));
+                            campo().setText(Double.toString(campoCambiaSigno));
 
                         } else {
 
-                            txtFieldLinea1.setText(Integer.toString((int) valor));
-                        }
-
-
-                    } else if (boton.getText().equals(".")) {
-
-
-
-                        if (txtFieldLinea1.getText() == "0" )  {
-
-                            txtFieldLinea1.setText("0.");
+                            campo().setText(Integer.toString((int) campoCambiaSigno));
 
                         }
 
-                        if (txtFieldLinea1.getText().indexOf(".") == -1) {
+                        break;
 
-                            txtFieldLinea1.setText(txtFieldLinea1.getText() + ".");
+                    case ".":
 
-                        } else if (txtFieldLinea1.getText() == "0.") {
+                        if (campo().getText().equals("0")) {
 
-
-
-                            txtFieldLinea1.setText(txtFieldLinea1.getText() + ".");
-                        }
-                    }
-
-                } else if (entra) {
-
-                    compruebaCero(txtFieldLinea2);
-
-                    double valor = Double.parseDouble(txtFieldLinea2.getText());
-
-                    int enteros = (int) valor;
-
-                    double resto = valor - enteros;
-
-                    if (boton.getText().equals("+/-")) {
-
-                        valor = -+ valor;
-
-                        if (resto != 0) {
-
-                            txtFieldLinea2.setText(Double.toString(valor));
-
-                        } else {
-
-                            txtFieldLinea2.setText(Integer.toString((int) valor));
+                            campo().setText("0.");
                         }
 
-                    } else if (boton.getText().equals(".")) {
+                        if (!campo().getText().contains(".")) {
 
-
-                        if (txtFieldLinea2.getText().indexOf(".") == -1) {
-
-                            txtFieldLinea2.setText(txtFieldLinea2.getText() + ".");
-
+                            campo().setText(campo().getText()+".");
                         }
 
-                    }
+                        break;
+
                 }
             }
         });
     }
 
     /*Método para obtener el resultado.
-    * @param boton - Recibe como parámetro el propio botón. Le añade un ActionListener para realizar la función
-    * asignada. Comprueba los valores existentes en las cuatro líneas de la pantalla: txtFieldLinea1, txtFieldOperador,
-    * txtFieldLinea2 y txtfieldResultado. Dependiendo de si existen valores o no en ellos realiza una acción u otra
+    * @param boton - Recibe como parámetro el propio botón. Añade un KeyListener para escuchar las teclas que se
+    * pulsan en el teclado y pulsar el botón correspondiente en la calcuadora. Además añade un ActionListener para
+    * realizar la función asignada.
     */
-
     private void btnOperacion (final JButton boton) {
 
+        boton.setFocusable(false);
 
         boton.addKeyListener(new PresionarTecla());
 
         boton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
 
+                //Llama al método para poner el signo del botón que se ha pulsado en el campo txtFieldOperador
+                ponSigno(boton);
+
+                //Comprueba que los campos no están vacíos
+                compruebaCero(campo());
                 compruebaCero(txtFieldLinea1);
-
                 compruebaCero(txtFieldLinea2);
-
                 compruebaCero(txtFieldResultado);
 
-                if (Double.parseDouble(txtFieldLinea1.getText()) != 0.0
-                        && Double.parseDouble(txtFieldLinea2.getText()) == 0.0) {
+                //Se crean cuatro variables para convertir los valores de los campos a doble y a String para el signo
+                double linea1 = Double.parseDouble(txtFieldLinea1.getText());
+                double linea2 = Double.parseDouble(txtFieldLinea2.getText());
+                String signo = txtFieldOperador.getText();
+                double resultado = Double.parseDouble(txtFieldResultado.getText());
+
+                if (linea1 != 0.0 && linea2 == 0.0) {
 
                     ponSigno(boton);
 
-                } else if (Double.parseDouble(txtFieldLinea1.getText()) != 0.0 &&
-                      Double.parseDouble(txtFieldLinea2.getText()) != 0.0 &&
-                            Double.parseDouble(txtFieldResultado.getText()) == 0.0) {
+                } else if (linea1 != 0.0 && linea2 != 0.0 && resultado == 0.0
+                        || linea1 == 0.0 && linea2 != 0.0 && resultado != 0.0
+                        || linea1 == 0.0 && linea2 != 0.0 && resultado == 0.0) {
 
-                    if (boton.getText().equals("+")) {
+                    //switch case para realizar los cálculos
+                    switch (boton.getText()) {
 
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                + Double.parseDouble(txtFieldLinea2.getText());
+                        case "+":
 
-                    } else if (boton.getText().equals("-")) {
+                            resultado = linea1 + linea2;
 
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                - Double.parseDouble(txtFieldLinea2.getText());
+                            break;
 
-                    } else if (boton.getText().equals("*")) {
+                        case "-":
 
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                * Double.parseDouble(txtFieldLinea2.getText());
+                            resultado = linea1 - linea2;
 
-                    } else if (boton.getText().equals("/")) {
+                            break;
 
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                / Double.parseDouble(txtFieldLinea2.getText());
+                        case "*":
 
-                    } else if (boton.getText().equals("=")) {
+                            resultado = linea1 * linea2;
 
-                        if (txtField2Operador.getText().equals("+")) {
+                            break;
 
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    + Double.parseDouble(txtFieldLinea2.getText());
+                        case "/":
 
-                        } else if (txtField2Operador.getText().equals("-")) {
+                            resultado = linea1 / linea2;
 
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    - Double.parseDouble(txtFieldLinea2.getText());
+                            break;
 
-                        } else if (txtField2Operador.getText().equals("*")) {
+                        //Si se pulsa el signo = realiza la operación según el signo del campo txtFieldOperador
+                        case "=":
 
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    * Double.parseDouble(txtFieldLinea2.getText());
+                            if (signo.equals("+")) {
 
-                        } else if (txtField2Operador.getText().equals("/")) {
+                                resultado = linea1 + linea2;
+                            }
 
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    / Double.parseDouble(txtFieldLinea2.getText());
-                        }
-                    }
+                            if (signo.equals("-")) {
 
-                    double lin1 = Double.parseDouble(txtFieldLinea1.getText());
-                    double lin2 = Double.parseDouble(txtFieldLinea2.getText());
+                                resultado = linea1 - linea2;
+                            }
 
+                            if (signo.equals("*")) {
 
+                                resultado = linea1 * linea2;
+                            }
 
-                    if (txtField2Operador.getText().equals("-")) {
+                            if (signo.equals("/")) {
 
-                        if (lin1 - lin2 == 0) {
+                                resultado = linea1 / linea2;
+                            }
 
-                            txtFieldLinea1.setText(txtFieldResultado.getText());
-
-                            txtFieldLinea2.setText("0");
-
-                            txtFieldResultado.setText("0");
-
-                            entra = true;
-
-                        }
-                    } else if (txtField2Operador.getText().equals("/")) {
-
-                        if (lin1 / lin2 == 0) {
-
-                            txtFieldLinea1.setText(txtFieldResultado.getText());
-
-                            txtFieldLinea2.setText("0");
-
-                            txtFieldResultado.setText("0");
-
-                            entra = true;
-                        }
-                    } else if (txtField2Operador.getText().equals("+")) {
-
-                        if (lin1 + lin2 == 0) {
-
-                            txtFieldLinea1.setText(txtFieldResultado.getText());
-
-                            txtFieldLinea2.setText("0");
-
-                            txtFieldResultado.setText("0");
-
-                            entra = true;
-
-
-                        }
-
-                    } else if (txtField2Operador.getText().equals("=")) {
-
-                        if (lin1 + lin2 == 0) {
-
-                            txtFieldLinea1.setText(txtFieldResultado.getText());
-
-                            txtFieldLinea2.setText("0");
-
-                            txtFieldResultado.setText("0");
-
-                            entra = true;
-
-
-                        }
+                            break;
 
                     }
 
-                    int entero = (int) sumaResultado;
+                    /*Si el resultado es cero comprueba que los valores de linea1 y linea2 son diferentes de 0 y
+                    * si la variable cambia es falsa. Por defecto está iniciada en false para que muestre el resultado
+                    * en el campo txtFieldResultado. Cuando lo muestra cambia el valor de la variable cambia a true
+                    * por si se vuelve a pulsar y el resultado sigue siendo cero. Si se cumple escribe en la primera
+                    * línea de la calculadora (txtFieldLinea1) el valor del campo txtFieldResultado
+                    */
+                    if (resultado==0) {
 
-                    double resto = sumaResultado - entero;
+                        if (linea1 != 0 && linea2 != 0 && cambia == false) {
 
-                    if (resto != 0) {
+                            escribeValor(resultado);
 
-                        df.format(sumaResultado);
+                            cambia = true;
 
-                        String res = df.format(sumaResultado);
+                        } else {
 
-                        res = res.replace(",", ".");
+                            actualizarCampos(resultado);
+
+                            cambia = false;
+                        }
+                    }
+
+                    /*Comprueba si el resultado tiene decimales. Si los tiene aplica el formato de la variable df
+                    * y lo escribe en el campo txtFieldResultado. Si no solo escribe la parte entera en el campo.
+                    */
+                    if (!(calculaResto(resultado) == 0.0)) {
+
+                            String res = df.format(resultado);
+
+                            res = res.replace(",", ".");
 
                         txtFieldResultado.setText(res);
 
+
                     } else {
 
-                        txtFieldResultado.setText(Integer.toString((int) sumaResultado));
+                        txtFieldResultado.setText(Integer.toString((int) resultado));
+
                     }
 
-                } else if (Double.parseDouble(txtFieldLinea1.getText()) != 0.0
-                        || Double.parseDouble(txtFieldLinea2.getText()) != 0.0 &&
-                            Double.parseDouble(txtFieldResultado.getText()) != 0.0) {
+                    /*Si la primera línea es 0, línea2 y resultado son diferentes de cero escribe el signo del botón
+                    * pulsado en el campo txtFieldOperador y escribe el valor de resultado en la primera línea
+                    * txtFieldLinea1
+                    */
 
-                    txtFieldLinea1.setText(txtFieldResultado.getText());
+                    if (linea1 == 0.0 && linea2 !=0.0 && resultado !=0.0) {
 
-                    txtFieldLinea2.setText("0");
+                        if (!cambia) {
 
-                    txtFieldResultado.setText("0");
+                            if (!(calculaResto(resultado) == 0.0)) {
 
-                    entra = true;
+                                String res = df.format(resultado);
 
-                } else if (Double.parseDouble(txtFieldLinea1.getText()) == 0.0 &&
-                        Double.parseDouble(txtFieldLinea2.getText()) != 0.0) {
+                                res = res.replace(",", ".");
+
+                                txtFieldResultado.setText(res);
+
+                            } else {
+
+                                txtFieldResultado.setText(Integer.toString((int) resultado));
+
+                            }
+
+                            cambia = true;
+
+                        } else if (cambia) {
+
+                            actualizarCampos(resultado);
+
+                            cambia = false;
+                        }
+                    }
+
+                } else if ((linea1 != 0.0 && linea2 != 0.0 && resultado != 0.0)
+                        || (linea1 == 0.0 && linea2 != 0.0 && resultado !=0.0)) {
 
                     ponSigno(boton);
 
-                    if (boton.getText().equals("+")) {
+                    actualizarCampos(resultado);
 
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                + Double.parseDouble(txtFieldLinea2.getText());
-
-                    } else if (boton.getText().equals("-")) {
-
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                - Double.parseDouble(txtFieldLinea2.getText());
-
-                    } else if (boton.getText().equals("*")) {
-
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                * Double.parseDouble(txtFieldLinea2.getText());
-
-                    } else if (boton.getText().equals("/")) {
-
-                        sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                / Double.parseDouble(txtFieldLinea2.getText());
-
-                    } else if (boton.getText().equals("=")) {
-
-                        if (txtField2Operador.getText().equals("+")) {
-
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    + Double.parseDouble(txtFieldLinea2.getText());
-
-                        } else if (txtField2Operador.getText().equals("-")) {
-
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    - Double.parseDouble(txtFieldLinea2.getText());
-
-                        } else if (txtField2Operador.getText().equals("*")) {
-
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    * Double.parseDouble(txtFieldLinea2.getText());
-
-                        } else if (txtField2Operador.getText().equals("/")) {
-
-                            sumaResultado = Double.parseDouble(txtFieldLinea1.getText())
-                                    / Double.parseDouble(txtFieldLinea2.getText());
-                        }
-
-                    }
-
-                    int entero = (int) sumaResultado;
-
-                    double resto = sumaResultado - entero;
-
-                    if (resto != 0) {
-
-                        df.format(sumaResultado);
-
-                        String res = df.format(sumaResultado);
-
-                        res = res.replace(",", ".");
-
-                        txtFieldResultado.setText(res);
-
-                    } else {
-
-                        txtFieldResultado.setText(Integer.toString((int) sumaResultado));
-                    }
-
-                } }
+                }
+            }
         });
     }
 
-
     /* Este método es para los botones de retroceso y borrado de la pantalla
-    * @param boton - Recibe como parámetro el propio botón. Si el botón es el de retroceso, comprueba la línea en la
-    * que se encuentra y borra el último caracter introducido. Si es el botón de borrado, vacía todos los campos
-    * y deja el cursor en el primer JTextField txtFieldLinea1.
+    * @param boton - Recibe como parámetro el propio botón. Si el botón es el de retroceso borra el último carácter de
+    * la línea y escribe un cero si el carácter es un cero "0", un signo "-" o un cero y un punto "0.". 
+    * Si es el botón de borrado, vacía todos los campos y deja el cursor en el primer JFormattedTextField 
+    * txtFieldLinea1.
     */
     private void btnBorrar (final JButton boton) {
+
+        boton.setFocusable(false);
 
         boton.addKeyListener(new PresionarTecla());
 
         boton.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
 
-                if (!entra) {
+                compruebaCero(campo());
 
-                    compruebaCero(txtFieldLinea1);
+                switch (boton.getText()) {
 
-                   if (boton.getText().equals("Bor")) {
+                    case "Bor":
 
-                       String cadena = txtFieldLinea1.getText();
-
-                       if (cadena.length() != 0) {
-
-                           cadena = cadena.substring(0, cadena.length() - 1);
-
-                           txtFieldLinea1.setText(cadena);
-
-                           if (cadena.length() == 0) {
-
-                               txtFieldLinea1.setText("0");
-                        }
-
-                    } else {
-
-                           txtFieldLinea1.setText("0");
-                       }
-
-                   }
-
-                } else if (entra) {
-
-                    compruebaCero(txtFieldLinea2);
-
-                    if (boton.getText().equals("Bor")) {
-
-                        String cadena = txtFieldLinea2.getText();
+                        String cadena = campo().getText();
 
                         if (cadena.length() != 0) {
 
                             cadena = cadena.substring(0, cadena.length() - 1);
 
-                            txtFieldLinea2.setText(cadena);
+                            campo().setText(cadena);
 
-                            if (cadena.length() == 0) {
+                            if (cadena.length() == 0 || cadena.equals("-") || cadena.equals("-0")) {
 
-                                txtFieldLinea2.setText("0");
+                                campo().setText("0");
+
                             }
-
-                        } else {
-
-                            txtFieldLinea2.setText("0");
                         }
 
-                    }
+                        break;
+
+                    case "CE":
+
+                        txtFieldLinea1.setText("");
+                        txtFieldLinea2.setText("");
+                        txtFieldOperador.setText("");
+                        txtFieldResultado.setText("");
+
+                        break;
 
                 }
-
-                if (boton.getText().equals("CE")) {
-
-
-
-                    txtFieldLinea1.setText(" ");
-                    txtFieldLinea2.setText(" ");
-                    txtFieldResultado.setText(" ");
-                    txtField2Operador.setText(" ");
-
-                    entra = false;
-
-                }
-
             }
-
         });
-
     }
 
-    /* Método que controla si se pulsan las teclas en el teclado y "pulsa" el botón en cuestión
-    * Con la variable swcontrol se control si se pulsa la tecla shift. Si se pulsa, swcontrol pasa a ser verdadero
-    * y se comprueba si lo es y si se ha pulsado la tecla 7 o el + del teclado.
-    *
-    * Por otro lado captura los números del teclado y el teclado numérico además de los signos de cálculo.
-    */
+    //Método para capturar la tecla del teclado que se ha pulsado y pulsar el botón correspondiente en la calculadora
     private class PresionarTecla extends KeyAdapter {
-
-        boolean swcontrol = false;
 
         public void keyPressed(KeyEvent ke) {
 
-            if (ke.getKeyCode() == 16) {
+            switch (ke.getKeyChar()) {
 
-                swcontrol = true;
+                case '/':
+
+                    btnDividir.doClick();
+
+                    break;
+
+                case '*':
+
+                    btnMultiplicar.doClick();
+
+                    break;
+
+                case '+':
+
+                    btnSuma.doClick();
+
+                    break;
+
+                case '-':
+
+                    btnResta.doClick();
+
+                    break;
+
+                case '=':
+
+                    btnIgual.doClick();
+
+                    break;
+
+                case '.':
+
+                    btnPunto.doClick();
+
+                    break;
+
+                case '0':
+
+                    btn0.doClick();
+
+                    break;
+
+                case '1':
+
+                    btn1.doClick();
+
+                    break;
+
+                case '2':
+
+                    btn2.doClick();
+
+                    break;
+
+                case '3':
+
+                    btn3.doClick();
+
+                    break;
+
+                case '4':
+
+                    btn4.doClick();
+
+                    break;
+
+                case '5':
+
+                    btn5.doClick();
+
+                    break;
+
+                case '6':
+
+                    btn6.doClick();
+
+                    break;
+
+                case '7':
+
+                    btn7.doClick();
+
+                    break;
+
+                case '8':
+
+                    btn8.doClick();
+
+                    break;
+
+                case '9':
+
+                    btn9.doClick();
+
+                    break;
+
+                case 'c':
+
+                    btnCE.doClick();
+
+                    break;
+
+                case 'C':
+
+                    btnCE.doClick();
+
+                    break;
 
             }
 
-            if (swcontrol == true && ke.getKeyCode() == KeyEvent.VK_7) {
+            switch (ke.getKeyCode()) {
 
-                btndividir.doClick();
+                case KeyEvent.VK_ENTER:
 
-                swcontrol = false;
+                    btnIgual.doClick();
 
-            } else if (ke.getKeyCode() == KeyEvent.VK_7 || ke.getKeyCode() == KeyEvent.VK_NUMPAD7) {
+                    break;
 
-                btn7.doClick();
+                case KeyEvent.VK_BACK_SPACE:
 
-            }
+                    btnBorrar.doClick();
 
-            if (swcontrol == true && ke.getKeyCode() == KeyEvent.VK_PLUS) {
+                    break;
 
-                btnmultiplicar.doClick();
+                case KeyEvent.VK_CONTROL:
 
-                swcontrol = false;
+                    btnMenos.doClick();
 
-            } else if (ke.getKeyCode() == KeyEvent.VK_ADD || ke.getKeyCode() == KeyEvent.VK_PLUS) {
+                    break;
 
-                btnsuma.doClick();
-            }
+                case KeyEvent.VK_ESCAPE:
 
-            if (ke.getKeyCode() == KeyEvent.VK_0 || ke.getKeyCode() == KeyEvent.VK_NUMPAD0) {
+                    jToggleBtnApagar.doClick();
 
-                btn0.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_1 || ke.getKeyCode() == KeyEvent.VK_NUMPAD1) {
-
-                btn1.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_2 || ke.getKeyCode() == KeyEvent.VK_NUMPAD2) {
-
-                btn2.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_3 || ke.getKeyCode() == KeyEvent.VK_NUMPAD3) {
-
-                btn3.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_4 || ke.getKeyCode() == KeyEvent.VK_NUMPAD4) {
-
-                btn4.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_5 || ke.getKeyCode() == KeyEvent.VK_NUMPAD5) {
-
-                btn5.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_6 || ke.getKeyCode() == KeyEvent.VK_NUMPAD6) {
-
-                btn6.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_8 || ke.getKeyCode() == KeyEvent.VK_NUMPAD8) {
-
-                btn8.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_9 || ke.getKeyCode() == KeyEvent.VK_NUMPAD9) {
-
-                btn9.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_SUBTRACT || ke.getKeyCode() == KeyEvent.VK_MINUS) {
-
-                btnresta.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_MULTIPLY) {
-
-                btnmultiplicar.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_DIVIDE) {
-
-                btndividir.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_DECIMAL || ke.getKeyCode() == KeyEvent.VK_PERIOD) {
-
-                btnPunto.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
-
-                btnigual.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-
-                btnBorrar.doClick();
+                    break;
 
             }
-
-            if (ke.getKeyCode() == KeyEvent.VK_CONTROL) {
-
-                btnmenos.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_C) {
-
-                btnCE.doClick();
-            }
-
-            if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
-
-                jToggleBtnApagar.doClick();
-            }
-
         }
-
     }
-
 }
